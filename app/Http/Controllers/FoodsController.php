@@ -7,18 +7,21 @@ use App\Models\Food;
 
 class FoodsController extends Controller
 {
-    public function index (){
+    public function index()
+    {
         $foods = Food::all(); //lay tat ca trong ban ghi
         // $foods = Food::where('name', '=', 'sushi') //lay san pham co ten la sushi
-                // ->firstOrFail();    
-                //    -> get();
+        // ->firstOrFail();    
+        //    -> get();
         // dd($foods);
         return view('foods.index', [
             'foods' => $foods
         ]);
     }
 
-    public function create(){
+    //CREATE
+    public function create()
+    {
         return view('foods.create');
     }
 
@@ -42,6 +45,7 @@ class FoodsController extends Controller
         return redirect('/foods');
     }
 
+    //EDIT & UPDATE
     public function edit($id)
     {
         $food = Food::find($id);
@@ -50,12 +54,23 @@ class FoodsController extends Controller
 
     public function update(Request $request, $id)
     {
-        $food = Food::where('id', $id) 
-            -> update([
-            'name' => $request->input('name'),
-            'count' => $request->input('count'),
-            'description' => $request->input('description')
-        ]);
+        // dd($request);
+        $food = Food::where('id', $id)
+            ->update([
+                'name' => $request->input('name'),
+                'count' => $request->input('count'),
+                'description' => $request->input('description')
+            ]);
+
+        return redirect('/foods');
+    }
+
+    //DELETE
+    public function destroy($id)
+    {
+        // dd("Hello " . $id);
+        $food = Food::find($id);
+        $food->delete();
 
         return redirect('/foods');
     }
