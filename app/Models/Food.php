@@ -8,9 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Food extends Model
 {
     use HasFactory;
-    protected $table = 'food';
+    protected $table = 'foods';
     protected $primaryKey = 'id';
     public $timestamps = true;
-    protected $dateFormat = 'h:m:s';
+    // protected $dateFormat = 'h:m:s';
+    protected $fillable = ['name', 'count', 'description'];
 
 }
