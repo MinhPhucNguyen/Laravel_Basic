@@ -7,7 +7,11 @@
         @foreach ($foods as $food)
             <li class="list-group-item d-flex justify-content-between align-items-start">
                 <div class="ms-2 me-auto">
-                    <div class="fw-bold">{{ $food->name }}</div>
+                    <div class="fw-bold">
+                        <a href="/foods/{{ $food->id }}">
+                            {{ $food->name }}
+                        </a>
+                    </div>
                     {{ $food->description }}
                 </div>
                 <span class="badge bg-primary rounded-pill"> {{ $food->count }} </span>

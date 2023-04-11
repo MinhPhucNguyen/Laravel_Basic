@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Food;
+use App\Models\Category;
+use App\Rules\Uppercase;
+use App\Http\Requests\CreateValidationRequest;
 
 class FoodsController extends Controller
 {
@@ -19,13 +22,25 @@ class FoodsController extends Controller
         ]);
     }
 
+    public function show($id)
+    {
+        $food = Food::find($id);
+        $category = Category::find($food->category_id);
+        // dd($category);
+        $food->category = $category;
+        // dd($food);
+        return view('foods.show')->with('food', $food);
+    }
+
     //CREATE
     public function create()
     {
-        return view('foods.create');
+        $categories = Category::all();
+        // dd($categories);
+        return view('foods.create')->with('categories', $categories);
     }
 
-    public function store(Request $request)
+    public function store(CreateValidationRequest $request)
     {
         // dd($request);
         //Cach 1
@@ -35,10 +50,27 @@ class FoodsController extends Controller
         // $food->description = $request->input('description');
 
         //Cach 2
+        dd($request->all());
+        // $request->validate([
+        //     'name' => 'required|unique:foods',
+        //     'count' => 'required|integer|min:0|max:1000',
+        //     'category_id' => 'required',
+        //     'image' => 'required|mimes:jpg,png,jpeg|max:5048'
+        // ]);
+
+        // $generatedImageName = 'image' . time() . '-'
+        //     . $request->name . '.'
+        //     . $request->image->extension();
+
+        // $request->image->move(public_path('images'), $generatedImageName);
+
+        $request->validated();
         $food = Food::create([
             'name' => $request->input('name'),
             'count' => $request->input('count'),
             'description' => $request->input('description'),
+            'category_id' => $request->input('category_id'),
+            // 'image_path' => $generatedImageName,
         ]);
         //save to database
         $food->save();
@@ -52,26 +84,24 @@ class FoodsController extends Controller
         return view('foods.edit')->with('food', $food);
     }
 
-    public function update(Request $request, $id)
+    public function update(CreateValidationRequest $request, $id)
     {
-        // dd($request);
+        // $request->validated();
         $food = Food::where('id', $id)
             ->update([
                 'name' => $request->input('name'),
                 'count' => $request->input('count'),
                 'description' => $request->input('description')
             ]);
-
+        dd($food);
         return redirect('/foods');
     }
 
     //DELETE
     public function destroy($id)
     {
-        // dd("Hello " . $id);
         $food = Food::find($id);
         $food->delete();
-
         return redirect('/foods');
     }
 }

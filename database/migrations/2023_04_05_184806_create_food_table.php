@@ -11,10 +11,27 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('food', function (Blueprint $table) {
+        //create food table
+        Schema::dropIfExists('foods');
+        Schema::create('foods', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
             $table->integer('count');
+            $table->longText('description');
+            $table->timestamps();
+
+            //foreign keyz  
+            $table->integer('category_id')->unsigned();
+            // $table->foreign('category_id')
+            //     ->references('id')
+            //     ->on('categories')
+            //     ->onDelete('set null');
+        });
+
+        //create categorie table
+        Schema::create('categories', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name');
             $table->longText('description');
             $table->timestamps();
         });
@@ -25,6 +42,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('food');
+        Schema::dropIfExists('foods');
     }
 };
